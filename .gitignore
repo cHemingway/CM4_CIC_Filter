@@ -1,0 +1,6 @@
+#Compiler generated files
+*.o
+test_cic
+
+#Data
+*.txt
