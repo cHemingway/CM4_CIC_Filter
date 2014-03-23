@@ -125,7 +125,7 @@ int main(int argc, char const *argv[])
 	}
 
 	/* DECIMATE */
-	blocksize = (linesin/M) * M; /* Do it all in the largest possible block for now */
+	blocksize = (indatasize/M)*M; 
 	pState = calloc(blocksize, sizeof(outdata));
 	assert(0==cic_decimate_init_q15(&decimate_instance, M, 1, pState, blocksize));
 	cic_decimate_q15(&decimate_instance, indata, outdata, blocksize);
