@@ -4,3 +4,7 @@ test_cic
 
 #Data
 *.txt
+
+#Ctags
+.tags
+.tags_sorted_by_file
