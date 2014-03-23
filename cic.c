@@ -32,16 +32,12 @@ void cic_decimate_q15(const cic_decimate_instance_q15 *S, q15_t *pSrc, q15_t *pD
 	for (i=1; i<blockSize; i++) {
 		pState[i] = pState[i-1] + pSrc[i];
 	}
-	/* COMB */
-	pState[0] = pState[0] - pState[(blockSize-1)-M]; /* Wrap around from last block */
-	for (i=M; i<blockSize; i+=M) {
-		pState[i] = pState[i] - pState[i-M];
-	}
 
-	/* DECIMATE */
+	/* COMB and DECIMATE */
 	gain = M; /* As only 1st order */
-	/* i = input index, j = output index */
-	for (i=0, j=0; i<blockSize; i+=M, j++) {
-		pDst[j] = pState[i] / gain; /* Remove DC Gain */
+	pState[1] = pState[1] - pState[blockSize-M]; /* Wrap around from last block */
+	pDst[0] = pState[1] / gain;
+	for (i=M, j=1; i<blockSize; i+=M, j++) {
+		pDst[j] = (pState[i] - pState[i-M]) / gain ;
 	}
 }
