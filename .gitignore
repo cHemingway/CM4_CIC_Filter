@@ -4,6 +4,7 @@ test_cic
 
 #Data
 *.txt
+*.png
 
 #Ctags
 .tags
