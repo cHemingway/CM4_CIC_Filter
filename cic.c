@@ -78,8 +78,8 @@ void cic_decimate_q32(const cic_decimate_instance_q32 *S, q32_t *pSrc, q32_t *pD
 	/* Integerate in new block */
 	for (i = 1; i<nStages; i++) {
 		for (j=i; j<(blockSize-i); j++) {
-				k = i + j;
-				pInt[k] = pInt[k-1] + pSrc[k];
+			k = i + j;
+			pInt[k] = pInt[k-1] + pSrc[k];
 		}	
 	}
 
