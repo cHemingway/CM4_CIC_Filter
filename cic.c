@@ -41,3 +41,27 @@ void cic_decimate_q15(const cic_decimate_instance_q15 *S, q15_t *pSrc, q15_t *pD
 		pDst[j] = (pState[i] - pState[i-M]) / gain ;
 	}
 }
+
+int cic_decimate_init_q32(cic_decimate_instance_q32 *S, uint16_t M, uint8_t N, uint8_t R, q32_t *pState1, q32_t *pState2, uint32_t blockSize)
+{
+	if((S==NULL) || (pState1==NULL) || (pState2==NULL)) { /* Check for null pointers */
+		return -1;
+	}
+
+	if (blockSize%M != 0) { /* Block size is not a multiple of M */
+		return -1;
+	}
+
+	S->M = M;
+	S->N = N;
+	S->R = R;
+	S->pState1 = pState1;
+	S->pState2 = pState2;
+	return 0; /* Success */
+}
+
+void cic_decimate_q32(const cic_decimate_instance_q32 *S, q15_t *pSrc, q15_t *pDst, uint32_t blockSize)
+{
+
+
+}
