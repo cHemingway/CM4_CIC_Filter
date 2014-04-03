@@ -19,12 +19,12 @@ void print_oom_error(void) {
 void print_usage(const char name[]) {
 	printf(
 	"%s: Performs a CIC filter on matlab vector \n"
-	"Usage: %s in [m] [type] [out] \n"
-	"\tin:\t1 value per line 16 bit input data, must be larger than the decimation factor \n"
+	"Usage: %s in [m] [type] [n] [r] [out] \n"
+	"\tin:\t1 value per line 16 bit input data, must be larger than m\n"
 	"\tm:\tdecimation factor, 1000 if not set \n"
+	"\ttype:\ttype of decimator, 32 or 16. 32 if not set \n"
 	"\tn:\tnumber of stages, 3 if not set \n"
 	"\tr:\tdifferential delay (normally 1 or 2), 2 if not set \n"
-	"\ttype:\ttype of decimator, 32 or 16. 32 if not set \n"
 	"\tout: \t1 value per line 16 bit output data, out.txt if not set \n",
 	name, name);
 }
