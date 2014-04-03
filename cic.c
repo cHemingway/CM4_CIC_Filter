@@ -87,11 +87,11 @@ void cic_decimate_q32(cic_decimate_instance_q32 *S, q32_t *pSrc, q32_t *pDst, ui
 			pCombIn[0] = pInt[nStages]; /*Copy output into Comb */
 
 			/* Comb */
-			for(n=1; n<nStages; n++) {
-				pCombIn[n+1] = pCombIn[n] - pCombIn[n-1];
+			for(n=R; n<nStages+R; n++) {
+				pCombIn[n+1] = pCombIn[n] - pCombIn[n-R];
 			}
 			/* Output */
-			pDst[j] = pCombIn[nStages];
+			pDst[j] = pCombIn[nStages+R];
 			j++;
 			nSample = 0;
 		}
