@@ -60,7 +60,7 @@ int main(int argc, char const *argv[])
 	cic_decimate_instance_q32 dec_instance_q32;
 
 	/* Check for correct number of command line arguments */
-	if ((argc<2) || (argc>4)) {
+	if ((argc<2) || (argc>8)) {
 		print_usage(argv[0]);
 		return -1;
 	}
@@ -78,7 +78,7 @@ int main(int argc, char const *argv[])
 	}
 	if (argc >= 4) { /* infile and M and type specified */
 		type = atoi(argv[3]);
-		if ((type!=16) || (type!=32)) {
+		if ( !((type==16) || (type==32)) ) {
 			printf("Invalid type specified \n");
 			print_usage(argv[0]);
 			return -1;
