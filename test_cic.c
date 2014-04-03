@@ -186,19 +186,25 @@ int main(int argc, char const *argv[])
 		}
 	}
 
-	/* DECIMATE */
+	/* SETUP DECIMATE */
+	blocksize=indatasize; 
 	if (type==16) {
-		blocksize = (indatasize/M)*M; 
-		pState = calloc(blocksize, sizeof(outdata_q15[0]));
+		pState = calloc(blocksize, sizeof(q32_t));
 		assert(0==cic_decimate_init_q15(&dec_instance_q15, M, 1, pState, blocksize));
-		cic_decimate_q15(&dec_instance_q15, indata_q15, outdata_q15, blocksize);
 	}
 	else if (type==32) {
-		blocksize = (indatasize/M)*M; 
 		pState1 = calloc(blocksize, sizeof(outdata_q32[0]));
 		pState2 = calloc(blocksize, sizeof(outdata_q32[0]));
 		assert(0==cic_decimate_init_q32(&dec_instance_q32, M, N, R, pState1, pState2, blocksize));
-		cic_decimate_q32(&dec_instance_q32, indata_q32, outdata_q32, blocksize);
+	}
+	/* EXECUTE DECIMATE */
+	for (i=0;i<indatasize;i+=blocksize) {
+		if (type==16) {
+			cic_decimate_q15(&dec_instance_q15, indata_q15+i, outdata_q15+(i/M), blocksize);
+		}
+		else if (type==32) {
+			cic_decimate_q32(&dec_instance_q32, indata_q32+i, outdata_q32+(i/M), blocksize);
+		}
 	}
 
 
