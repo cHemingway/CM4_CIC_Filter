@@ -57,49 +57,48 @@ int cic_decimate_init_q32(cic_decimate_instance_q32 *S, uint16_t M, uint8_t N, u
 	S->R = R;
 	S->pState1 = pState1;
 	S->pState2 = pState2;
+	S->nSample = 0;
 	return 0; /* Success */
 }
 
-void cic_decimate_q32(const cic_decimate_instance_q32 *S, q32_t *pSrc, q32_t *pDst, uint32_t blockSize)
+void cic_decimate_q32(cic_decimate_instance_q32 *S, q32_t *pSrc, q32_t *pDst, uint32_t blockSize)
 {
-	int i, j, k = 0;
+	int i = 0, j = 0;
 	q32_t *pInt =  	S->pState1; 	/*State after integrator */
-	q32_t *pComb = 	S->pState2;		/*State after decimator */
+	q32_t *pCombIn = S->pState2;		/*State after decimator */
 	uint16_t M = 	S->M; 			/*Decimation Factor */
 	uint8_t	 R = 	S->R;			/*Differential delay scale in comb */
 	uint8_t	 nStages = 	S->N;		/*Number of stages */
-	uint16_t outSize = blockSize/M;	/* Size of output */
+	int nSample = S->nSample;
 
-	/* INTEGRATE */
-	/* Wrap around from last block */
-	for (i = 0; i<nStages; i++) { 
-		pInt[i] = pInt[blockSize-i] + pSrc[i];
-	}
-	/* Integerate in new block */
-	for (i = 1; i<nStages; i++) {
-		for (j=i; j<(blockSize-i); j++) {
-			k = i + j;
-			pInt[k] = pInt[k-1] + pSrc[k];
-		}	
-	}
 
-	/* DECIMATE */
-	for (i=0, j=0; i<blockSize; i=i+M, j++)
-	{
-		pComb[j] = pInt[i];
-	}
+	/* Downsample each element one by one */
+	j = 0; /* Output Index */
+	for (i=0; i<blockSize; i++) {
+		int n;
 
-	/* COMB */
-	/* Wrap around from last block */
-	for (i = 0; i<nStages; i++) {
-		pDst[i] = pComb[outSize-i] - pComb[outSize-i-R];
-	}
-	/* Comb out new block */
-	for (i=R; i<nStages; i++) {
-		for (j = i+nStages; j<(outSize-i); j++)
-		{
-			k = i + j;
-			pDst[k] = pComb[k] - pComb[k-R];
+		/*Integrate*/
+		pInt[0] = pSrc[i];
+		for (n=1; n<nStages+1; n++) {
+			pInt[n] = pInt[n]+ pInt[n-1]; 
 		}
+
+		if (nSample==M) { /*If we are at a decimate block*/
+			pCombIn[0] = pInt[nStages]; /*Copy output into Comb */
+
+			/* Comb */
+			for(n=1; n<nStages; n++) {
+				pCombIn[n+1] = pCombIn[n] - pCombIn[n-1];
+			}
+			/* Output */
+			pDst[j] = pCombIn[nStages];
+			j++;
+			nSample = 0;
+		}
+		else {
+			nSample += 1;
+		}
+
 	}
+	S->nSample = nSample;
 }

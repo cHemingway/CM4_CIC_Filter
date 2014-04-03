@@ -187,7 +187,7 @@ int main(int argc, char const *argv[])
 	}
 
 	/* SETUP DECIMATE */
-	blocksize=indatasize; 
+	blocksize = (indatasize/100); 
 	if (type==16) {
 		pState = calloc(blocksize, sizeof(q32_t));
 		assert(0==cic_decimate_init_q15(&dec_instance_q15, M, 1, pState, blocksize));
