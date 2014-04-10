@@ -193,9 +193,7 @@ int main(int argc, char const *argv[])
 		assert(0==cic_decimate_init_q15(&dec_instance_q15, M, 1, pState, blocksize));
 	}
 	else if (type==32) {
-		pState1 = calloc(blocksize, sizeof(outdata_q32[0]));
-		pState2 = calloc(blocksize, sizeof(outdata_q32[0]));
-		assert(0==cic_decimate_init_q32(&dec_instance_q32, M, N, R, pState1, pState2, blocksize));
+		assert(0==cic_decimate_init_q32(&dec_instance_q32, M, N, R, blocksize));
 	}
 	/* EXECUTE DECIMATE */
 	for (i=0;i<indatasize;i+=blocksize) {

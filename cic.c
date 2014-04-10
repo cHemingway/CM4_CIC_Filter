@@ -1,5 +1,6 @@
 #include "cic.h"
 #include <stddef.h>
+#include <string.h>
 
 
 int cic_decimate_init_q15(cic_decimate_instance_q15 *S, uint16_t M, uint8_t N, q32_t *pState, uint32_t blockSize) {
@@ -42,9 +43,9 @@ void cic_decimate_q15(const cic_decimate_instance_q15 *S, q15_t *pSrc, q15_t *pD
 	}
 }
 
-int cic_decimate_init_q32(cic_decimate_instance_q32 *S, uint16_t M, uint8_t N, uint8_t R, q32_t *pState1, q32_t *pState2, uint32_t blockSize)
+int cic_decimate_init_q32(cic_decimate_instance_q32 *S, uint16_t M, uint8_t N, uint8_t R, uint32_t blockSize)
 {
-	if((S==NULL) || (pState1==NULL) || (pState2==NULL)) { /* Check for null pointers */
+	if(S==NULL) { /* Check for null pointers */
 		return -1;
 	}
 
@@ -52,20 +53,32 @@ int cic_decimate_init_q32(cic_decimate_instance_q32 *S, uint16_t M, uint8_t N, u
 		return -1;
 	}
 
+	if (R > CIC_MAX_R) { /* R is above limit */
+		return -1;
+	}
+
+	if (N > CIC_MAX_N) { /* M is above limit */
+		return -1;
+	}
+
+	/* Clear Arrays, we can't just use sizeof as we have a pointer */
+	//memset(S->accum, 0, sizeof S->accum[0] * CIC_MAX_N);
+	//memset(S->prev_accum, 0, sizeof S->prev_accum[0] * CIC_MAX_N);
+	//memset(S->combs, 0, sizeof S->combs[0] * CIC_MAX_N * (CIC_MAX_R+1));
+	//memset(S->accum, 0, sizeof S->accum);
+	//memset(S->prev_accum, 0, sizeof S->prev_accum);
+	//memset(S->combs, 0, sizeof S->combs);
+
 	S->M = M;
 	S->N = N;
 	S->R = R;
-	S->pState1 = pState1;
-	S->pState2 = pState2;
 	S->nSample = 0;
 	return 0; /* Success */
 }
 
 void cic_decimate_q32(cic_decimate_instance_q32 *S, q32_t *pSrc, q32_t *pDst, uint32_t blockSize)
 {
-	int i = 0, j = 0;
-	q32_t *pInt =  	S->pState1; 	/*State after integrator */
-	q32_t *pCombIn = S->pState2;		/*State after decimator */
+	int i = 0, j = 0, k = 0;
 	uint16_t M = 	S->M; 			/*Decimation Factor */
 	uint8_t	 R = 	S->R;			/*Differential delay scale in comb */
 	uint8_t	 nStages = 	S->N;		/*Number of stages */
@@ -77,23 +90,38 @@ void cic_decimate_q32(cic_decimate_instance_q32 *S, q32_t *pSrc, q32_t *pDst, ui
 	for (i=0; i<blockSize; i++) {
 		int n;
 
-		/*Integrate*/
-		pInt[0] = pSrc[i];
-		for (n=1; n<nStages+1; n++) {
-			pInt[n] = pInt[n]+ pInt[n-1]; 
+		/*INTEGRATE*/
+		S->accum[0] = S->prev_accum[0] + pSrc[i]; /* 1st Stage */
+		for (n=1; n<nStages; n++) {	/* Remaining Stages */
+			/* Output =  Last Output Value + Output of Previous Stage */
+			S->accum[n] = S->prev_accum[n] + S->accum[n-1];
 		}
+		/* Copy back to delay */
+		memcpy(S->prev_accum, S->accum, sizeof S->prev_accum[0] * CIC_MAX_N);
 
 		if (nSample==M) { /*If we are at a decimate block*/
-			pCombIn[0] = pInt[nStages]; /*Copy output into Comb */
 
-			/* Comb */
-			for(n=R; n<nStages+R; n++) {
-				pCombIn[n+1] = pCombIn[n] - pCombIn[n-R];
+			/* COMB */
+			/* First Value */
+			S->combs[R][0] = S->accum[nStages-1] - S->combs[0][0];
+
+			/* Next Values */
+			for (n=1;n<nStages;n++) {
+				S->combs[R][n] = S->combs[R][n-1] - S->combs[0][n];
 			}
+
 			/* Output */
-			pDst[j] = pCombIn[nStages+R];
-			j++;
+			pDst[j++] = S->combs[R][nStages-1];
 			nSample = 0;
+
+			/* Copy back delays */
+			for (n=R;n>0;n--) {
+				for (k=0;k<nStages;k++) {
+					S->combs[n-1][k] = S->combs[n][k];
+				}
+			}
+
+
 		}
 		else {
 			nSample += 1;
