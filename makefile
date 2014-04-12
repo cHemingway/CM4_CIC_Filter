@@ -20,7 +20,7 @@ clean:
 	rm -rf *.o $(EXECUTABLE)
 	rm -rf $(TEST_DATA) $(TEST_RESULTS)
 
-test: plot_cic.py plot_freq_response.py
+test: all plot_cic.py plot_freq_response.py 
 	mkdir -p $(TEST_DATA) $(TEST_RESULTS)
 	python ./plot_cic.py
 	python ./plot_freq_response.py
