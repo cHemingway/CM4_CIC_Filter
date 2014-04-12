@@ -5,6 +5,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sys
 
+#Names of data and results folders, see makefile
+test_temp_folder = "./test_temp/"
+test_result_folder = "./test_results/"
+#Names of data in/out file
+infile = test_temp_folder + "freq.txt"
+outfile = test_temp_folder +"freq_out.txt"
+#Name of output image
+plotfile = test_result_folder + "freq_resp.png"
+
 def print_stderr(string):
     sys.stderr.write(string)
     sys.stderr.flush()
@@ -36,5 +45,5 @@ for freq in freqs:
 plt.semilogy(freqs, gains)
 plt.ylabel("Gain (dB)")
 plt.xlabel("Normalised Frequency")
-plt.savefig("freq_resp.png")
+plt.savefig(plotfile)
 #plt.show()
