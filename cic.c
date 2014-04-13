@@ -62,12 +62,9 @@ int cic_decimate_init_q32(cic_decimate_instance_q32 *S, uint16_t M, uint8_t N, u
 	}
 
 	/* Clear Arrays, we can't just use sizeof as we have a pointer */
-	//memset(S->accum, 0, sizeof S->accum[0] * CIC_MAX_N);
-	//memset(S->prev_accum, 0, sizeof S->prev_accum[0] * CIC_MAX_N);
-	//memset(S->combs, 0, sizeof S->combs[0] * CIC_MAX_N * (CIC_MAX_R+1));
-	//memset(S->accum, 0, sizeof S->accum);
-	//memset(S->prev_accum, 0, sizeof S->prev_accum);
-	//memset(S->combs, 0, sizeof S->combs);
+	memset(S->accum, 0, sizeof S->accum[0] * CIC_MAX_N);
+	memset(S->prev_accum, 0, sizeof S->prev_accum[0] * CIC_MAX_N);
+	memset(S->combs, 0, sizeof S->combs[0][0] * CIC_MAX_N * (CIC_MAX_R+1));
 
 	S->M = M;
 	S->N = N;
