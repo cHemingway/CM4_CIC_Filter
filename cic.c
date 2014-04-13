@@ -96,7 +96,7 @@ void cic_decimate_q32(cic_decimate_instance_q32 *S, q32_t *pSrc, q32_t *pDst, ui
 		/* Copy back to delay */
 		memcpy(S->prev_accum, S->accum, sizeof S->prev_accum[0] * CIC_MAX_N);
 
-		if (nSample==M) { /*If we are at a decimate block*/
+		if (nSample==M-1) { /*If we are at a decimate block*/
 
 			/* COMB */
 			/* First Value */
