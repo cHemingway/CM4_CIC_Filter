@@ -50,10 +50,10 @@ int main(int argc, char const *argv[])
 	FILE *infile, *outfile;
 	int M = 1000, N = 3, R = 2;
 	int type = 16; /* Default of 16 bit */
-	q15_t *indata_q15, *outdata_q15;
-	q32_t *indata_q32, *outdata_q32;
+	q15_t *indata_q15 = NULL, *outdata_q15 = NULL;
+	q32_t *indata_q32 = NULL, *outdata_q32 = NULL;
 	int indatum; /* Single data point */
-	q32_t *pState;
+	q32_t *pState = NULL;
 	int indatasize, outdatasize; /* Size is in number of q15, not bytes */
 	int linesin, linesout, blocksize, i;
 	cic_decimate_instance_q15 dec_instance_q15;
