@@ -9,3 +9,6 @@ test_cic
 #Ctags
 .tags
 .tags_sorted_by_file
+.ipynb_checkpoints
+CIC_test/CIC_test.xcodeproj/xcuserdata
+CIC_test/CIC_test.xcodeproj/project.xcworkspace/xcuserdata
