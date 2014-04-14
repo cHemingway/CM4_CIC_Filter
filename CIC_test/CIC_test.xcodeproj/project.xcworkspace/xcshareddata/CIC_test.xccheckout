@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>04BE721E-87FC-4410-A927-6A44401C6DE8</string>
+	<key>IDESourceControlProjectName</key>
+	<string>CIC_test</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>22940E38-1D57-48BB-A2A1-F16A0D0AB77D</key>
+		<string>ssh://github.com/cHemingway/CM4_CIC_Filter.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>CIC_test/CIC_test.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>22940E38-1D57-48BB-A2A1-F16A0D0AB77D</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/cHemingway/CM4_CIC_Filter.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>22940E38-1D57-48BB-A2A1-F16A0D0AB77D</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>22940E38-1D57-48BB-A2A1-F16A0D0AB77D</string>
+			<key>IDESourceControlWCCName</key>
+			<string>TD4-CIC-Filter</string>
+		</dict>
+	</array>
+</dict>
+</plist>
