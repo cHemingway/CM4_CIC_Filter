@@ -30,7 +30,7 @@ typedef struct cic_decimate_instance_q32_t {
 	uint32_t G;			/* DC Gain */
 	q32_t	 accum[CIC_MAX_N];					/* Accumulators for COMB */
 	q32_t 	 prev_accum[CIC_MAX_N];				/* Previous value of accumulators */
-	q32_t 	 combs[CIC_MAX_R+1][CIC_MAX_N];	/* Values of comb, including previous */
+	q32_t 	 combs[CIC_MAX_R+1][CIC_MAX_N+1];	/* Values of comb, including previous */
 	int nSample;		/*Current sample number */
 } cic_decimate_instance_q32;
 

@@ -64,7 +64,7 @@ int cic_decimate_init_q32(cic_decimate_instance_q32 *S, uint16_t M, uint8_t N, u
 	/* Clear Arrays, we can't just use sizeof as we have a pointer */
 	memset(S->accum, 0, sizeof S->accum[0] * CIC_MAX_N);
 	memset(S->prev_accum, 0, sizeof S->prev_accum[0] * CIC_MAX_N);
-	memset(S->combs, 0, sizeof S->combs[0][0] * CIC_MAX_N * (CIC_MAX_R+1));
+	memset(S->combs, 0, sizeof S->combs[0][0] * (CIC_MAX_N+1) * (CIC_MAX_R+1));
 
 	S->M = M;
 	S->N = N;
@@ -99,22 +99,22 @@ void cic_decimate_q32(cic_decimate_instance_q32 *S, q32_t *pSrc, q32_t *pDst, ui
 		if (nSample==M-1) { /*If we are at a decimate block*/
 
 			/* COMB */
-			/* First Value */
-			S->combs[R][0] = S->accum[nStages-1] - S->combs[0][0];
+			/* First Value - Store in _Input_ */
+			S->combs[R][0] = S->accum[nStages-1];
 
 			/* Next Values */
-			for (n=1;n<nStages;n++) {
-				S->combs[R][n] = S->combs[R][n-1] - S->combs[0][n];
+			for (n=1;n<=nStages;n++) {
+				S->combs[R][n] = S->combs[R][n-1] - S->combs[0][n-1];
 			}
 
 			/* Output */
-			pDst[j++] = S->combs[R][nStages-1];
+			pDst[j++] = S->combs[R][nStages];
 			nSample = 0;
 
 			/* Copy back delays */
-			for (n=R;n>0;n--) {
-				for (k=0;k<nStages;k++) {
-					S->combs[n-1][k] = S->combs[n][k];
+            for (n=0;n<=nStages+1;n++) {
+                for (k=R;k>0;k--) {
+					S->combs[k-1][n] = S->combs[k][n];
 				}
 			}
 
