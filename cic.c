@@ -49,10 +49,6 @@ int cic_decimate_init_q32(cic_decimate_instance_q32 *S, uint16_t M, uint8_t N, u
 		return -1;
 	}
 
-	if (blockSize%M != 0) { /* Block size is not a multiple of M */
-		return -1;
-	}
-
 	if (R > CIC_MAX_R) { /* R is above limit */
 		return -1;
 	}
