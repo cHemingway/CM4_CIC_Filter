@@ -114,7 +114,6 @@ void cic_decimate_q32(cic_decimate_instance_q32 *S, q32_t *pSrc, q32_t *pDst, ui
 				}
 			}
 
-
 		}
 		else {
 			nSample += 1;

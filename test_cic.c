@@ -8,7 +8,7 @@
 #define LINE_TERMINATOR "\n"
 
 void print_file_error(const char filename[]) {
-	printf("Error opening file %s: %s \n", 
+	printf("Error opening file %s: %s \n",
 		filename, strerror(errno));
 }
 
@@ -102,7 +102,7 @@ int main(int argc, char const *argv[])
 	}
 	if (argc >= 7) { /* All arguments specified */
 		outfilename = argv[6];
-	} 
+	}
 
 	/* Attempt to open input file */
 	infile = fopen(infilename, "r");
@@ -134,7 +134,7 @@ int main(int argc, char const *argv[])
 			return -1;
 		}
 	}
-	
+
 	/* Read all input data in */
 	linesin = 0; /* Index of input data */
 	while(-1!=read_input(infile, &indatum)) {
@@ -187,7 +187,7 @@ int main(int argc, char const *argv[])
 	}
 
 	/* SETUP DECIMATE */
-	blocksize = (indatasize/100); 
+	blocksize = (indatasize/100);
 	if (type==16) {
 		pState = calloc(blocksize, sizeof(q32_t));
 		assert(0==cic_decimate_init_q15(&dec_instance_q15, M, 1, pState, blocksize));
