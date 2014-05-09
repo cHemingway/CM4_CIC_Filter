@@ -4,40 +4,66 @@ import numpy as np
 import matplotlib.pyplot as plt
 import subprocess
 
-M = 10
-length = 10000
-n_steps = 400.0
+length = 100000
 A = 1000
-freq = 0.1
+M = 1000
+square_freq = 0.00005
+sin_freq = 0.005
 
 #Names of data and results folders, see makefile
 test_temp_folder = "./test_temp/"
 test_result_folder = "./test_results/"
-#Names of data in/out file
-infile = test_temp_folder + "sin.txt"
-outfile = test_temp_folder + "sin_out.txt"
-#Name of output image
-plotfile = test_result_folder + "sin_wave.png"
 
-#Generate Input Data
-x1 = np.arange(length)
-datain = A*np.sin(2*np.pi*freq*x1)
-#datain = A* np.ones(length)	
-np.savetxt(infile, datain, "%d")
+def sin_wave(length, freq, A):
+	'''Function to generate a sin wave of given length, freq, amplitude'''
+	x1 = np.arange(length)
+	data = A*np.sin(freq*x1)
+	return data
 
-#Call the thing
-subprocess.call("./test_cic %s %d 32 2 2 %s" % (infile,M,outfile), shell=True)
 
-#Read the output data
-dataout = np.loadtxt(outfile)
+def square_wave(length, freq, A):
+	'''Function to generate a square wave of given length, freq, amplitude'''
+	x1 = np.arange(length)
+	data = np.zeros_like(x1)
+	t = 1/(freq)
+	for i in range (0,len(x1)):
+		data[i] = (A if (i%t) > (t-1)/2 else -A)
+	data = data + (A/3)*np.sin(0.005*x1)
+	return data
 
-#Plot input
-plt.subplot(211)
-plt.plot(x1, datain)
+def plot_wave(data, name_prefix, M):
+	'''Function to plot a wave before and after the CIC filter'''
+	infile = test_temp_folder + name_prefix + ".txt"
+	outfile = test_temp_folder + name_prefix + "_out.txt"
+	#Name of output image
+	plotfile = test_result_folder + name_prefix + "_wave.png"
+	#Save the data
+	np.savetxt(infile, data, "%d")
 
-#Plot Output
-plt.subplot(212)
-x2 = np.arange(length/M)
-plt.plot(x2, dataout)
+	#Call the thing
+	subprocess.call("./test_cic %s %d 32 2 2 %s" % (infile,M,outfile), shell=True)
 
-plt.savefig(plotfile)
+	#Read the output data
+	dataout = np.loadtxt(outfile)
+
+	#Plot input
+	plt.subplot(211)
+	x1 = np.arange(data.size)
+	plt.plot(x1, data)
+	plt.title("Input")
+	#Plot Output
+	plt.subplot(212)
+	x2 = np.arange(length/M)
+	plt.plot(x2, dataout)
+	plt.title("Output")
+	#Save the file
+	plt.savefig(plotfile)
+	plt.close()
+
+
+if __name__ == '__main__':
+	plot_wave(sin_wave(length,sin_freq,A), "sin", M)
+	plot_wave(square_wave(length,square_freq,A), "square", M)
+
+
+
